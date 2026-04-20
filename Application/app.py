@@ -34,12 +34,45 @@ def get_encoded_state(state_val):
             return 0
     return state_mapping.get(state_val, 0)
 
+#Calculate the EMI
+def calculate_emi(P, r, n):
+    r = r / (12 * 100)  # monthly interest
+    emi = (P * r * (1 + r)**n) / ((1 + r)**n - 1)
+    return emi
+
+#Best Loan term to be predicted
+def optimize_loan_term(amount, risk_score, dti, state, emp_len):
+    best_term = None
+    best_score = float('inf')
+
+    for term in [12, 24, 36, 60]:
+        emi = calculate_emi(amount, 10, term)  # assume 10% interest
+        
+        # Risk penalty (example logic)
+        risk_penalty = dti * 10 + (700 - risk_score)
+
+        # Higher term = more risk
+        term_penalty = term * 0.5
+
+        score = emi + risk_penalty + term_penalty
+
+        if score < best_score:
+            best_score = score
+            best_term = term
+
+    return best_term
+
 # Home page
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
+term_map = {
+    0: 60,
+    1: 36,
+    2: 24,
+    3: 12
+}
 # Prediction
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -49,7 +82,8 @@ def predict():
         fico = float(request.form.get('risk_score', 0))
         dti = float(request.form.get('dti', 0))
         state_raw = request.form.get('state', 'NY')
-
+        # Load kmeans
+        kmeans = artifacts['kmeans']
         state_enc = get_encoded_state(state_raw)
         emp_len = 5  # fixed value
 
@@ -86,7 +120,9 @@ def predict():
                 risk_level = "LOW RISK"
             else:
                 risk_level = "MEDIUM RISK"       
-
+        #best_term = optimize_loan_term(final_limit, fico, dti, state_enc, emp_len)//Take from K-Means
+        segment = kmeans.predict(scaler.transform([[req_amount, fico, dti, state_enc, emp_len]]))[0]
+        best_term = term_map.get(int(segment), 36)
         return render_template(
             'index.html',
             result=status,
@@ -98,6 +134,7 @@ def predict():
             fico=fico,
             dti=dti,
             state=state_raw,
+            loan_term=best_term,
             color=color
         )
 

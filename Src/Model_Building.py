@@ -24,7 +24,7 @@ concatenatedData = Combined_Cleaned_Dataset(acc,rej)
 concatenatedData.to_csv(DATA_PATH_FINAL, index=False)
 
 #EDA
-HistPlotsForAnalysis(concatenatedData)
+#HistPlotsForAnalysis(concatenatedData)
 #AcceptedLoanBasedOnDate_Plot(concatenatedData)
 
 # ==================================================
@@ -80,7 +80,8 @@ print("XGBRegressor  Done")
 # CLUSTURING
 # ===================================================
 kmeans = KMeans(n_clusters=4, random_state=42)
-concatenatedData['segment'] = kmeans.fit_predict(X_scaled)
+kmeans.fit(X_scaled)
+
 print("kmeans clustering  Done")
 
 # Classification Eval
@@ -95,6 +96,7 @@ artifacts = {
     'classifier': xgb_Model,
     'regressor': reg,
     'scaler': scaler,
+    'kmeans':kmeans,
     'state_mapping': state_mapping, # Save the dict instead of the LE object
     'default_state': default_state_val
 }

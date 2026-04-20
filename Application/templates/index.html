@@ -161,21 +161,22 @@ button:hover {
         <p>We cannot approve {{amount_req}} at this time.</p>
 
         <p>However, we suggest a safe counter-offer:</p>
-        <div class="amount">${{counter}}</div>
+        <div class="amount">${{counter}}</div>      
 
     {% else %}
         <div class="approved">APPROVED</div>
         <p>Your loan has been approved successfully.</p>
     {% endif %}
-
+    <div class="risk_level" style="margin-top: 10px; font-weight: bold;">
+            Risk Level:{{risk_level}}
+    </div>
+    <div style="margin-top: 10px; font-weight: bold;">
+            Recommended Loan term:{{loan_term}}
+    </div>
     <div class="confidence">
         System Confidence: {{confidence}}%
     </div>
-    <div style="margin-top: 10px; font-weight: bold;">
-        Risk Level:{{risk_level}}
-
-    </div>
-
+    
 </div>
 {% endif %}
 
