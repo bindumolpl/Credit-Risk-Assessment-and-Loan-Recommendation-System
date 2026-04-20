@@ -101,7 +101,7 @@ def predict():
 
         # Regression (loan recommendation)
         reg_input = np.array([[fico, dti, state_enc, emp_len]])
-        predicted_limit = reg.predict(reg_input)[0]
+        predicted_limit = abs(reg.predict(reg_input)[0])
 
         # Decision logic
         if is_accepted == 0:
