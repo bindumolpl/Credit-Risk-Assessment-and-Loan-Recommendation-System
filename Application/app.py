@@ -5,7 +5,7 @@ import pickle
 
 # Paths
 BASE_DIR = os.path.dirname(__file__)
-MODEL_DIR = os.path.join(BASE_DIR, "..", "Model")
+MODEL_DIR = os.path.join(BASE_DIR, "Model")
 
 app = Flask(__name__)
 
