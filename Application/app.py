@@ -10,7 +10,12 @@ MODEL_DIR = os.path.join(BASE_DIR, "Model")
 app = Flask(__name__)
 
 # Load model artifacts
-with open(os.path.join(MODEL_DIR, "lending_club_pipeline.pkl"), "rb") as file:
+model_path = os.path.join(MODEL_DIR, "lending_club_pipeline.pkl")
+
+if not os.path.exists(model_path):
+    raise FileNotFoundError(f"Model file not found at {model_path}")
+
+with open(model_path, "rb") as file:
     artifacts = pickle.load(file)
 
 clf = artifacts['classifier']
@@ -102,4 +107,5 @@ def predict():
 
 # Run app
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)

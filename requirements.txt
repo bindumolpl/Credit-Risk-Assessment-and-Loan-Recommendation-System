@@ -1,8 +1,10 @@
+# heavy libraries => removed for rendering
 pandas
 numpy
 scikit-learn
-matplotlib
-seaborn
+#matplotlib #only for plots
+#seaborn
 xgboost
 flask
 joblib
+gunicorn
