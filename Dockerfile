@@ -22,6 +22,7 @@ COPY . /app
 
 # Expose the port the app runs on
 EXPOSE 5000
+ENV PYTHONUNBUFFERED=1
 
 # Command to run the application with Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "Application.app:app"]
